@@ -51,21 +51,24 @@ main :: proc() {
 		}
 	}
 
+
+	l: Lexer
+
 	arena: vmem.Arena
 	arena_allocator := vmem.arena_allocator(&arena)
 
-	// // reading from a file for now
-	// data, err := os.read_entire_file_from_path("tests/test.ini", arena_allocator)
-	// if err != nil {
-	// 	panic("mc what")
-	// }
+	data, err := os.read_entire_file_from_path("tests/test.ini", arena_allocator)
+	if err != nil {
+		panic("mc what")
+	}
 
-	// // a new 'iter' header, but the underlying pointer is still the same as data
-	// iter := string(data)
+	init_lexer(&l, string(data))
 
-	// for line in strings.split_lines_iterator(&iter) {
-	// 	fmt.println(line)
-	// }
+	for {
+		tok := next_token(&l)
+		fmt.println("####", tok, "####")
+		if tok.type == .EOF do break
+	}
 
 	vmem.arena_destroy(&arena)
 }
