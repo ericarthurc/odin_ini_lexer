@@ -32,7 +32,7 @@ This is a very simple INI parser that tokenizes a .ini file and parses it to a m
 
 This has no error handling and probably doesn't handle any edge cases.
 
-It is written in a way to take your own allocator if you want, but the allocator based in will allocate the file data, the created map and the json string. The example folder shows passing in an arena allocator.
+It is written in a way to take your own allocator if you want, but the allocator passed in will allocate the file data, the created map and the json string. The example folder shows passing in an arena allocator.
 
 This was not meant to be used as a library or package, but was written somewhat in that way. No procedures are marked with private but this should be treated more for educational and studying purposes.
 
