@@ -12,17 +12,34 @@ burger:"cheese"
 'hello'=world
 ;comment here
 [section]
+there:everywhere
+june:fall
 #comment 2
 foo=bar
+[a]
+yummy:tummy
+[section]
+waffle="weha"
+
 ```
 
-into this JSON string (order is not guaranteed):
+Into this JSON string (order is not guaranteed):
 
 ```json
 {
   "global": { "here": "now" },
-  "section": { "foo": "bar" },
-  "food": { "fun": "sun", "burger": "cheese", "hello": "world" }
+  "food": {
+    "hello": "world",
+    "fun": "sun",
+    "burger": "cheese"
+  },
+  "section": {
+    "waffle": "weha",
+    "there": "everywhere",
+    "june": "fall",
+    "foo": "bar"
+  },
+  "a": { "yummy": "tummy" }
 }
 ```
 
@@ -30,7 +47,7 @@ into this JSON string (order is not guaranteed):
 
 This is a very simple INI parser that tokenizes a .ini file and parses it to a map returned as JSON.
 
-This has no error handling and probably doesn't handle any edge cases.
+There is no error handling and probably doesn't handle any edge cases.
 
 It is written in a way to take your own allocator if you want, but the allocator passed in will allocate the file data, the created map and the json string. The example folder shows passing in an arena allocator.
 

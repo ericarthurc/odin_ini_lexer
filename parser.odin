@@ -1,16 +1,14 @@
-#+feature dynamic-literals
 package ini
 
 import "base:runtime"
 import "core:encoding/json"
 
 Parser :: struct {
-	ini_map:          map[string]map[string]string,
-	current_sub_map:  map[string]string,
-	current_section:  string,
-	previous_text:    string,
-	previous_section: string,
-	allocator:        runtime.Allocator,
+	ini_map:         map[string]map[string]string,
+	current_sub_map: map[string]string,
+	current_section: string,
+	previous_text:   string,
+	allocator:       runtime.Allocator,
 }
 
 
@@ -47,22 +45,22 @@ parse_token :: proc(t: Token, p: ^Parser) {
 	#partial switch t.type {
 	case .Section:
 		p.current_section = t.text
-		p.ini_map[t.text] = {}
+		if t.text not_in p.ini_map {
+			p.ini_map[t.text] = make(map[string]string, p.allocator)
+		}
 
 	case .Key:
 		if p.current_section == "" {
 			p.current_section = "global"
 		}
 
-		if p.current_section != p.previous_section {
-			p.current_sub_map = make(map[string]string, p.allocator)
-			p.current_sub_map[t.text] = {}
-
-			p.previous_section = p.current_section
+		if existing, ok := p.ini_map[p.current_section]; ok {
+			p.current_sub_map = existing
 		} else {
-			p.current_sub_map[t.text] = {}
+			p.current_sub_map = make(map[string]string, p.allocator)
 		}
 
+		p.current_sub_map[t.text] = ""
 		p.previous_text = t.text
 		p.ini_map[p.current_section] = p.current_sub_map
 
