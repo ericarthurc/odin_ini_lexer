@@ -2,6 +2,7 @@ package ini
 
 import "core:unicode"
 
+
 Token_Type :: enum {
 	Section,
 	Key,
@@ -12,11 +13,13 @@ Token_Type :: enum {
 	EOF,
 }
 
+
 Token :: struct {
 	type: Token_Type,
 	text: string,
 	line: int,
 }
+
 
 Lexer :: struct {
 	src:  string,
@@ -24,6 +27,7 @@ Lexer :: struct {
 	line: int,
 	ch:   u8, // consider rune here
 }
+
 
 // this is assuming a standard size, should be moved to utf8 rune decoding
 lexer_read :: proc(l: ^Lexer) {
@@ -40,9 +44,12 @@ lexer_read :: proc(l: ^Lexer) {
 	new_line_check(l)
 }
 
-init_lexer :: proc(l: ^Lexer, src: string) {
+init_lexer :: proc(src: string) -> Lexer {
+	l: Lexer
 	l.src = src
-	lexer_read(l)
+	lexer_read(&l)
+
+	return l
 }
 
 new_line_check :: proc(l: ^Lexer) {
