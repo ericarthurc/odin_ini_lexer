@@ -4,29 +4,6 @@ import "core:fmt"
 import "core:mem"
 import vmem "core:mem/virtual"
 import "core:os"
-import "core:strings"
-
-// INI file
-/*
-[section]
-key:value
-hello=world
-;comment here
-[section]
-foo=bar
-*/
-
-// JSON output
-/*
-{
-  "section": {
-    "key": "value",
-    "hello": "world",
-    "foo": "bar"
-  }
-}
-*/
-
 
 main :: proc() {
 	when ODIN_DEBUG {
@@ -57,6 +34,7 @@ main :: proc() {
 	arena: vmem.Arena
 	arena_allocator := vmem.arena_allocator(&arena)
 
+
 	data, err := os.read_entire_file_from_path("tests/test.ini", arena_allocator)
 	if err != nil {
 		panic("mc what")
@@ -64,11 +42,18 @@ main :: proc() {
 
 	init_lexer(&l, string(data))
 
+
+	tokens := make([dynamic]Token, arena_allocator)
+
 	for {
 		tok := next_token(&l)
-		fmt.println("####", tok, "####")
+		// fmt.println(tok)
 		if tok.type == .EOF do break
+
+		append(&tokens, tok)
 	}
+
+	fmt.println(tokens[:])
 
 	vmem.arena_destroy(&arena)
 }

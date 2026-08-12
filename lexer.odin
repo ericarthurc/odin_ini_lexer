@@ -1,9 +1,6 @@
 package ini
 
-import "core:fmt"
-import "core:log"
 import "core:unicode"
-import "core:unicode/utf8"
 
 Token_Type :: enum {
 	Section,
