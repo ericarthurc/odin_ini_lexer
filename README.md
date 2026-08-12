@@ -16,7 +16,7 @@ burger:"cheese"
 foo=bar
 ```
 
-into this JSON stirng (order is not guaranteed):
+into this JSON string (order is not guaranteed):
 
 ```json
 {
