@@ -2,6 +2,32 @@
 
 There is an example in the example folder that shows reading a file, parsing the file into a map, and returning it as a JSON string.
 
+It turns this .ini file:
+
+```ini
+here:now
+[food]
+fun=sun
+burger:"cheese"
+'hello'=world
+;comment here
+[section]
+#comment 2
+foo=bar
+```
+
+into this JSON stirng (order is not guaranteed):
+
+```json
+{
+  "global": { "here": "now" },
+  "section": { "foo": "bar" },
+  "food": { "fun": "sun", "burger": "cheese", "hello": "world" }
+}
+```
+
+### Information:
+
 This is a very simple INI parser that tokenizes a .ini file and parses it to a map returned as JSON.
 
 This has no error handling and probably doesn't handle any edge cases.
