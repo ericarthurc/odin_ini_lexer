@@ -2,6 +2,7 @@ package ini
 
 import "base:runtime"
 import "core:encoding/json"
+import "core:fmt"
 
 Parser :: struct {
 	ini_map:         map[string]map[string]string,

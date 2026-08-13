@@ -11,6 +11,7 @@ fun=sun
 burger:"cheese"
 'hello'=world
 ;comment here
+ああ=é
 [section]
 there:everywhere
 june:fall
@@ -20,26 +21,30 @@ foo=bar
 yummy:tummy
 [section]
 waffle="weha"
-
 ```
 
 Into this JSON string (order is not guaranteed):
 
 ```json
 {
-  "global": { "here": "now" },
-  "food": {
-    "hello": "world",
-    "fun": "sun",
-    "burger": "cheese"
+  "global": {
+    "here": "now"
   },
   "section": {
-    "waffle": "weha",
     "there": "everywhere",
     "june": "fall",
-    "foo": "bar"
+    "foo": "bar",
+    "waffle": "weha"
   },
-  "a": { "yummy": "tummy" }
+  "a": {
+    "yummy": "tummy"
+  },
+  "food": {
+    "burger": "cheese",
+    "hello": "world",
+    "\u3042\u3042": "├⌐",
+    "fun": "sun"
+  }
 }
 ```
 

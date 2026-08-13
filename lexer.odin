@@ -1,6 +1,7 @@
 package ini
 
 import "core:unicode"
+import "core:unicode/utf8"
 
 
 Token_Type :: enum {
@@ -20,16 +21,15 @@ Token :: struct {
 	line: int,
 }
 
-
 Lexer :: struct {
-	src:  string,
-	pos:  int,
-	line: int,
-	ch:   u8, // consider rune here
+	src:             string,
+	pos:             int,
+	line:            int,
+	ch:              u8,
+	expecting_value: bool,
 }
 
 
-// this is assuming a standard size, should be moved to utf8 rune decoding
 lexer_read :: proc(l: ^Lexer) {
 	if l.pos >= len(l.src) {
 		l.ch = 0
@@ -86,6 +86,12 @@ scan_until :: proc(l: ^Lexer, check: ..rune) -> (int, bool) {
 	return starting_pos, false
 }
 
+is_character_start :: proc(l: ^Lexer) -> bool {
+	r, size := utf8.decode_rune_in_string(l.src[l.pos - 1:])
+
+	return unicode.is_letter(r)
+}
+
 next_token :: proc(l: ^Lexer) -> Token {
 	white_space_check(l)
 
@@ -119,14 +125,24 @@ next_token :: proc(l: ^Lexer) -> Token {
 	case l.ch == '=' || l.ch == ':':
 		t.type = .Assign
 		t.text = l.src[l.pos - 1:l.pos]
+		l.expecting_value = true
 		lexer_read(l)
 
-	case unicode.is_letter(rune(l.ch)) || l.ch == '\"' || l.ch == '\'':
-		starting_pos, is_key := scan_until(l, '=', ':')
-		if is_key {
-			t.type = .Key
-		} else {
+	case is_character_start(l) || l.ch == '\"' || l.ch == '\'':
+		starting_pos: int
+
+		if l.expecting_value {
+			starting_pos, _ = scan_until(l)
 			t.type = .Value
+			l.expecting_value = false
+		} else {
+			found_assign: bool
+			starting_pos, found_assign = scan_until(l, '=', ':')
+			if found_assign {
+				t.type = .Key
+			} else {
+				t.type = .Illegal
+			}
 		}
 
 		if l.src[starting_pos] == '\"' || l.src[starting_pos] == '\'' {
